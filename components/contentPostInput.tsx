@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { CREATE_POST } from "../graphql/mutations";
 import SelectField from "./selectfeild";
+import { FETCH_POSTS_QUERY } from "../graphql/queries";
 
 export default function ContentPostInput() {
   const router = useRouter();
@@ -16,19 +17,18 @@ export default function ContentPostInput() {
 
   const [createPost, { loading, error, data }] = useMutation(CREATE_POST, {
     onCompleted: ({ createPost }) => {
-        console.log(createPost);
       if (createPost?.status === "201") {
         console.log("created");
       } else if (createPost?.status === "401") {
         // Rejected, not authenticated
         setPostInput({ ...postInput, authenticated: false });
       }
-    }
+    },
+    refetchQueries:[{query:FETCH_POSTS_QUERY}]
   });
   const handleChange = (e: { target: { value: any; name: string } }) => {
     const newPostInput = { ...postInput };
     const value = e.target.value;
-    console.log(e.target.name);
     // update input value and validity
     if (e.target.name === "title") {
       newPostInput.title = value;
@@ -73,6 +73,13 @@ export default function ContentPostInput() {
         },
       },
     });
+
+    setPostInput({
+      title: "",
+      content: "",
+      category: "",
+      authenticated: true,
+    }); 
   };
 
   if (!postInput.authenticated) {
@@ -80,8 +87,8 @@ export default function ContentPostInput() {
   }
 
   return (
-    <div>
-      <form className="w-full max-w-lg bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="pt-12 px-6">
+      <form className="w-3/5 max-w dark:bg-gray-200 shadow-md rounded px-8 pt-8 pb-1 mb-4">
         <div className="text-center pb-4 text-lg">Create Post</div>
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -112,7 +119,7 @@ export default function ContentPostInput() {
         </div>
         <div className="text-center pt-1 mb-12 pb-1">
           <button
-            className="bg-green inline-block px-6 py-2.5 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
+            className="inline-block px-6 py-2.5 text-black font-medium text-xs hover:text-white leading-tight uppercase rounded shadow-md hover:bg-black hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
             type="button"
               onClick={handleSubmit}
           >

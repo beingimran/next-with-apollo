@@ -1,6 +1,8 @@
-// import {signIn, signOut, useSession} from 'next-auth/react'
-
-import Register from "./register";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Login from "./login";
+import Content from "./post";
+import { useRouter } from "next/router";
 
 
 // export default function MyApp(){
@@ -14,8 +16,26 @@ import Register from "./register";
 //   }
 // }
 
+
 export default function  MyApp(){
+  const router = useRouter();
+  const [token,setToken] = useState(false)
+  let tokens: string | null
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+  tokens = localStorage.getItem('token')
+    
+  }
+  useEffect(()=>{
+    if (tokens){
+      setToken(true)
+    }
+
+  },[])
+
   return(
-    <Register></Register>
-  )
+    <>
+      {token ? router.push("/post") : <Login></Login>}
+      </>
+  );
 }

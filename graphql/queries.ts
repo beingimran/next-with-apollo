@@ -10,6 +10,7 @@ const FETCH_POSTS_QUERY = gql`
       postAt
       lastActive
       likes
+      category
     }
   }
 `;

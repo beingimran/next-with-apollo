@@ -1,18 +1,16 @@
-import { useQuery } from "@apollo/client";
 import ContentPostInput from "../../components/contentPostInput";
-// import ContentPostArea from "./ContentPostArea";
-import {GET_ALL_CATEGORY} from '../../graphql/queries'
+import ContentPostArea from "../../components/contentPostArea";
+import Header from "../../components/header";
+import Profile from "../../components/profile";
 
 export default function Content() {
-    const {loading,error,data} = useQuery(GET_ALL_CATEGORY)
-    let category = data?.getAllCategory
-    console.log(category)
-    if(!category){
-        console.log(category)
-    //  category = category.map((p:any)=>{console.log(p)})
-    }
-   
     return (
+        <div>
+            <Header></Header>
+           
             <ContentPostInput/>
+            {/* <Profile/> */}
+            <ContentPostArea/>
+            </div>
     );
 };
